@@ -16,7 +16,7 @@ yarn dev
 open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security
 ```
 
-localhost:3000 으로 프로젝트에 접근합니다.
+`localhost:3000/dashborad` 로 프로젝트에 접근합니다.
 
 ## 📌 1. 애플리케이션 모니터링 대시보드 구성
 
