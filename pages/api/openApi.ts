@@ -36,8 +36,14 @@ const OPEN_API = {
 };
 
 type OPEN_API_KEYS = keyof typeof OPEN_API;
-type OPEN_API_EMPTY_STRING_KEYS = keyof typeof OPEN_API[""];
-type OPEN_API_JSON_KEYS = keyof typeof OPEN_API["json"];
+export type OPEN_API_EMPTY_STRING_KEYS = keyof typeof OPEN_API[""];
+export type OPEN_API_JSON_KEYS = keyof typeof OPEN_API["json"];
+
+export type OPEN_API_RESULT = {
+  key: string;
+  name: string;
+  data: number | object;
+};
 
 const getPath = (
   url: string,
@@ -72,11 +78,13 @@ const getOpenApi =
         headers: OPEN_API_HEADERS,
       })
         .then((response) => response.json())
-        .then((data) => ({
-          key,
-          name,
-          data,
-        }))
+        .then(
+          (data): OPEN_API_RESULT => ({
+            key,
+            name,
+            data,
+          })
+        )
     );
 
 const spot = getOpenApi("");
