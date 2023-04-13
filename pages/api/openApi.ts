@@ -31,7 +31,9 @@ const OPEN_API = {
     act_socket: "액티브 Socket 수",
   },
   json: {
-    "exception/{stime}/{etime}": "Exception 발생 ",
+    "thread_count/{stime}/{etime}/s5": "Thread Count ",
+    "exception/{stime}/{etime}/s5": "Exception 발생 ",
+    project: "프로젝트 정보",
   },
 };
 
@@ -87,7 +89,8 @@ const getOpenApi =
         )
     );
 
+const meta = getOpenApi("json");
 const spot = getOpenApi("");
 const series = getOpenApi("json");
 
-export default { spot, series };
+export default { meta, spot, series };
