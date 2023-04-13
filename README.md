@@ -1,38 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📊 대시보드 제작 프로젝트
 
-## Getting Started
+## 📌 0. 프로젝트 생성 및 실행
 
-First, run the development server:
+기존 자바스크립트로 작성되어 있던 코드를 타입스크립트로 옮기기 위해, Next.js + TypeScript를 사용하여 새로운 react 프로젝트를 만들었습니다. (프로젝트는 새로나온 react.dev 문서의 권장사항을 따라 Next로 만들었습니다.)
+
+프로젝트 실행은 다음 명령어를 입력하여 진행합니다.
 
 ```bash
-npm run dev
-# or
+yarn install
+
 yarn dev
-# or
-pnpm dev
+
+# CORS error 방지
+# OSX
+open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+localhost:3000 으로 프로젝트에 접근합니다.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 📌 1. 애플리케이션 모니터링 대시보드 구성
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+애플리케이션 모니터링을 위해선 `장애인지지표`와 `장애현상지표`가 필요합니다.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+따라서 장애인지지표를 위해 `TPS`를 선택하고, 장애현상지표를 위해 `CPU`와 `Heap 메모리`를 선택하여 모니터링 하였습니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+이외의 정보성 지표로
 
-## Learn More
+`트렌젝션 개수`,`액티브 트렌젝션 개수`
 
-To learn more about Next.js, take a look at the following resources:
+`전체 DB connection 수`, `활성 DB connection 수`, `비활성 DB connection 수`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`활성화 상태의 에이전트 수`, `비활성화 상태의 에이전트 수`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+를 선택하였습니다.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+또한 메타성 정보로 프로젝트 이름과 플랫폼을 보여줍니다.
