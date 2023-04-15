@@ -1,8 +1,7 @@
+import { OPEN_API_EMPTY_STRING_KEYS, OPEN_API_RESULT } from "@/common/types";
 import { useEffect, useState } from "react";
-import api, {
-  OPEN_API_EMPTY_STRING_KEYS,
-  OPEN_API_RESULT,
-} from "@/pages/api/openApi";
+import api from "@/pages/api/openApi";
+import { INTERVAL_TIME_CONST } from "@/common/const";
 
 interface InformaticsProps {
   spotKey: OPEN_API_EMPTY_STRING_KEYS;
@@ -11,12 +10,27 @@ interface InformaticsProps {
 const Informatics = ({ spotKey }: InformaticsProps) => {
   const [openApiData, setOpenApiData] = useState<OPEN_API_RESULT>();
 
+  const intevalApiCall = () => {
+    // 첫 호출시 바로 실행되는 함수
+    setTimeout(() => {
+      api.spot(spotKey).then((result) => setOpenApiData(result));
+    }, 0);
+    // 정해진 간격으로 실행되는 함수
+    const afterDelayApiCall = () => {
+      setTimeout(() => {
+        api.spot(spotKey).then((result) => setOpenApiData(result));
+        afterDelayApiCall();
+      }, INTERVAL_TIME_CONST);
+    };
+    afterDelayApiCall();
+  };
+
   useEffect(() => {
-    api.spot(spotKey).then((result) => setOpenApiData(result));
+    intevalApiCall();
   }, []);
 
   return (
-    <section>
+    <div>
       {typeof openApiData === "object" && (
         <div>
           <span>{openApiData.name}</span>
@@ -25,7 +39,7 @@ const Informatics = ({ spotKey }: InformaticsProps) => {
           </span>
         </div>
       )}
-    </section>
+    </div>
   );
 };
 
