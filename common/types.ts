@@ -1,4 +1,4 @@
-import { OPEN_API } from "./const";
+import { OPEN_API } from "@/common/const";
 
 export type OPEN_API_KEYS = keyof typeof OPEN_API;
 export type OPEN_API_EMPTY_STRING_KEYS = keyof typeof OPEN_API[""];
