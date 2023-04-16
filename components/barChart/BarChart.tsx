@@ -5,7 +5,7 @@ import {
   barChartBorderColor,
   barChartBorderWidth,
   barChartOption,
-} from "./barChartConfig";
+} from "@/components/barChart/BarChartConfig";
 import {
   Chart as ChartJS,
   CategoryScale,

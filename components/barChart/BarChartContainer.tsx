@@ -2,7 +2,7 @@ import { INTERVAL_TIME_CONST } from "@/common/const";
 import { OPEN_API_EMPTY_STRING_KEYS, OPEN_API_RESULT } from "@/common/types";
 import api from "@/pages/api/openApi";
 import { useEffect, useState } from "react";
-import BarChart from "./BarChart";
+import BarChart from "@/components/barChart/BarChart";
 
 interface BarChartContainerProps {
   title: string;
