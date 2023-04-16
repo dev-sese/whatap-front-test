@@ -22,11 +22,11 @@ open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args
 
 애플리케이션 모니터링을 위해선 `장애인지지표`와 `장애현상지표`가 필요합니다.
 
-따라서 장애인지지표를 위해 `TPS`를 선택하고, 장애현상지표를 위해 `CPU`와 `Heap 메모리`를 선택하여 모니터링 하였습니다.
+따라서 장애인지지표를 위해 `트랜젝션`를 선택하고, 장애현상지표를 위해 `Heap 메모리(조회시간 내 통계 평균)`, `Heap 메모리(조회시간 내 통계 최댓값)`를 선택하여 모니터링 하였습니다.
 
 이외의 정보성 지표로
 
-`트렌젝션 개수`,`액티브 트렌젝션 개수`
+`트렌젝션 개수`,`TPS`, `액티브 트렌젝션 개수`
 
 `전체 DB connection 수`, `활성 DB connection 수`, `비활성 DB connection 수`
 

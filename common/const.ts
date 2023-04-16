@@ -31,7 +31,9 @@ export const OPEN_API = {
     act_socket: "액티브 Socket 수",
   },
   json: {
-    "thread_count/{stime}/{etime}/s5": "Thread Count ",
+    "transaction/{stime}/{etime}/s5": "transaction",
+    "heap_use/{stime}/{etime}/max": "heap 통계 최댓값",
+    "heap_use/{stime}/{etime}/avg": "heap 통계 평균",
     "exception/{stime}/{etime}/s5": "Exception 발생 ",
     "exception/{stime}/{etime}": "Exception 발생 ",
     project: "프로젝트 정보",
@@ -39,4 +41,6 @@ export const OPEN_API = {
 };
 
 // 데이터 갱신 주기(5초)
-export const INTERVAL_TIME_CONST = 5000;
+export const INTERVAL_TIME_CONST = 5 * 1000;
+
+// 이전 데이터
