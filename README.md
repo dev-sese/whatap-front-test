@@ -35,3 +35,9 @@ open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args
 를 선택하였습니다.
 
 또한 메타성 정보로 프로젝트 이름과 플랫폼을 보여줍니다.
+
+## 📌 2. API 구성 특이사항
+
+### BarChart
+
+`https://api.whatap.io/open/api/json/spot` API를 사용하면 한 번의 호출로 데이터들을 불러올 수 있어 더 효과적이나, 과제의 데이터 요청 요구사항에 Endpoint 기준 10개 이상의 Open API 사용이 명시되어 있어 API를 나누어 호출하였습니다.
