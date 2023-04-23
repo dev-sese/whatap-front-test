@@ -32,9 +32,9 @@ const LineChartContainerTest = ({
     for (let i = 0; i < firstDataList.length; i++) {
       let time = new Date(firstDataList[i][0]);
       chartLabelData.push(
-        `${
-          time.getHours() < 10 ? "0" + time.getHours() : time.getHours()
-        }:${time.getMinutes()}`
+        `${time.getHours() < 10 ? "0" + time.getHours() : time.getHours()}:${
+          time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
+        }`
       );
       chartData.push(firstDataList[i][1]);
     }
@@ -63,7 +63,7 @@ const LineChartContainerTest = ({
           etime: yesterdayEnd,
         })
         .then((result) =>
-          changeYesterdayFirstDataToChartData(result.data.objects[0].series)
+          changeYesterdayFirstDataToChartData(result.data.objects[0]?.series)
         );
     }, 10);
   };
@@ -76,16 +76,16 @@ const LineChartContainerTest = ({
       api
         .series("thread_count/{stime}/{etime}/1387800924", {
           stime: todayStart,
-          etime: endTime,
+          etime: currentEndTimeRef.current,
         })
-        .then((result) =>
-          changeTodayFirstDataToChartData(result.data.objects[0].series)
-        );
+        .then((result) => {
+          changeTodayFirstDataToChartData(result.data.objects[0]?.series);
+          setEndTime(result.data.etime);
+        });
     }, 10);
     // 정해진 간격으로 실행되는 함수
     const afterDelayApiCall = () => {
       let etime = Date.now();
-      console.log(currentEndTimeRef.current, etime);
       setTimeout(() => {
         api
           .series("thread_count/{stime}/{etime}/1387800924", {
@@ -95,13 +95,12 @@ const LineChartContainerTest = ({
           .then((result) => {
             setTodayData((prev: any) => [
               ...prev,
-              result.data.objects[0].series[0][1],
+              result.data.objects[0]?.series[0][1],
             ]);
+            setEndTime(result.data.etime);
           });
-
         afterDelayApiCall();
       }, 300000);
-      setEndTime(etime);
     };
     afterDelayApiCall();
   };
