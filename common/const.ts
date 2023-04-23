@@ -31,12 +31,17 @@ export const OPEN_API = {
     act_socket: "액티브 Socket 수",
   },
   json: {
-    "transaction/{stime}/{etime}/s5": "transaction",
+    "transaction/{stime}/{etime}/5": "transaction",
+    "transaction/{stime}/{etime}": "transaction",
+    "tx_caller/{stime}/{etime}": "transaction",
+    "tx_caller/{stime}/{etime}/-628198688/s5": "transaction",
+    "tx_caller/{stime}/{etime}/-628198688": "transaction",
     "heap_use/{stime}/{etime}/max": "heap 통계 최댓값",
     "heap_use/{stime}/{etime}/avg": "heap 통계 평균",
     "exception/{stime}/{etime}/s5": "Exception 발생 ",
     "exception/{stime}/{etime}": "Exception 발생 ",
     "thread_count/{stime}/{etime}/s5": "thread count ",
+    "thread_count/{stime}/{etime}/1387800924": "thread count ",
     project: "프로젝트 정보",
   },
 };
