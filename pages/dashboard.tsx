@@ -1,4 +1,7 @@
-import BarChartContainer from "@/components/barChart/BarChartContainer";
+import {
+  BarChartContainer,
+  BarChartContainerTest,
+} from "@/components/barChart/BarChartContainer";
 import Informatics from "@/components/Informatics";
 import type { NextPage } from "next";
 
@@ -7,14 +10,13 @@ const Dashboard: NextPage = () => {
     <main>
       <section>
         <Informatics spotKey="act_agent" />
-        <Informatics spotKey="inact_agent" />
       </section>
       <section>
         <BarChartContainer
           title={"트렌젝션"}
           spotKeyList={["txcount", "actx"]}
         />
-        <BarChartContainer
+        <BarChartContainerTest
           title={"DB connection"}
           spotKeyList={["dbconn_total", "dbconn_act", "dbconn_idle"]}
         />
