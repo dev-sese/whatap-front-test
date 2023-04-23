@@ -36,6 +36,7 @@ export const OPEN_API = {
     "heap_use/{stime}/{etime}/avg": "heap 통계 평균",
     "exception/{stime}/{etime}/s5": "Exception 발생 ",
     "exception/{stime}/{etime}": "Exception 발생 ",
+    "thread_count/{stime}/{etime}/s5": "thread count ",
     project: "프로젝트 정보",
   },
 };
