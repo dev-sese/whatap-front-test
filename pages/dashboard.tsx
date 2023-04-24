@@ -1,7 +1,4 @@
-import {
-  BarChartContainer,
-  BarChartContainerTest,
-} from "@/components/barChart/BarChartContainer";
+import { BarChartContainer } from "@/components/barChart/BarChartContainer";
 import Informatics from "@/components/Informatics";
 import type { NextPage } from "next";
 import LineChartContainer from "@/components/lineChart/LineChartContainer";
