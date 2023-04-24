@@ -1,4 +1,3 @@
-import { BarChartContainer } from "@/components/barChart/BarChartContainer";
 import Informatics from "@/components/Informatics";
 import type { NextPage } from "next";
 import LineChartContainer from "@/components/lineChart/LineChartContainer";
@@ -9,6 +8,8 @@ import {
   OPEN_API_JSON_KEYS,
   OPEN_API_RESULT,
 } from "@/common/types";
+import DbBarChartContainer from "@/components/barChart/DbBarChartContainer";
+import TxBarChartContainer from "@/components/barChart/TxBarChartContainer";
 
 const Dashboard: NextPage = () => {
   // API 큐
@@ -27,8 +28,6 @@ const Dashboard: NextPage = () => {
     [key: string]: OPEN_API_RESULT;
   }>({});
 
-  console.log(apiResponse);
-
   // 큐에 변화가 생기면 API 호출
   useEffect(() => {
     if (apiQueue.length !== 0) {
@@ -39,7 +38,7 @@ const Dashboard: NextPage = () => {
         case "spot":
           try {
             api.spot(currentApi.key).then((result) => {
-              setApiResponse({ ...apiResponse, [currentApi.widget]: result });
+              setApiResponse({ ...apiResponse, [currentApi.key]: result });
               setApiQueue(currentQueue.slice(1));
             });
           } catch (e) {
@@ -55,7 +54,7 @@ const Dashboard: NextPage = () => {
                 etime: currentApi.etime!,
               })
               .then((result) => {
-                setApiResponse({ ...apiResponse, [currentApi.widget]: result });
+                setApiResponse({ ...apiResponse, [currentApi.key]: result });
                 setApiQueue(currentQueue.slice(1));
               });
           } catch (e) {
@@ -69,13 +68,11 @@ const Dashboard: NextPage = () => {
   return (
     <main>
       <section>
-        <Informatics setApiQueue={setApiQueue} data={apiResponse?.info} />
+        <Informatics setApiQueue={setApiQueue} data={apiResponse?.[""]} />
       </section>
       <section>
-        <BarChartContainer
-          setApiQueue={setApiQueue}
-          data={apiResponse?.["bar_db"]}
-        />
+        <TxBarChartContainer setApiQueue={setApiQueue} data={apiResponse} />
+        <DbBarChartContainer setApiQueue={setApiQueue} data={apiResponse} />
       </section>
       <section>
         <LineChartContainer

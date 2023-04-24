@@ -27,22 +27,28 @@ ChartJS.register(
 
 interface BarChartProps {
   title: string;
-  apiData: any;
-  labels: OPEN_API_EMPTY_STRING_KEYS[];
+  apiData: { [key: string]: OPEN_API_RESULT };
+  list: string[];
 }
 
-const BarChart = ({ title, apiData, labels }: BarChartProps) => {
-  const changeApiDataToChartData = (
-    apiData: any,
-    labels: OPEN_API_EMPTY_STRING_KEYS[]
-  ) => {
-    // let dataSets: number[] = [];
-    // labels.map((label: any) => dataSets.push(apiData[label]?.data));
+const BarChart = ({ title, apiData, list }: BarChartProps) => {
+  const changeApiDataToChartData = (apiData: {
+    [key: string]: OPEN_API_RESULT;
+  }) => {
+    // label list로 데이터 정제
+    let datasets: number[] = [];
+    list.map((key: string) => {
+      let data = apiData[key];
+      if (data) {
+        datasets.push(data.data);
+      }
+    });
+
     return {
-      labels: labels,
+      labels: list,
       datasets: [
         {
-          data: [apiData],
+          data: datasets,
           backgroundColor: barChartBackgroundColor,
           borderColor: barChartBorderColor,
           borderWidth: barChartBorderWidth,
@@ -54,7 +60,7 @@ const BarChart = ({ title, apiData, labels }: BarChartProps) => {
   return (
     <Bar
       options={barChartOption(title)}
-      data={changeApiDataToChartData(apiData, labels)}
+      data={changeApiDataToChartData(apiData)}
     />
   );
 };
