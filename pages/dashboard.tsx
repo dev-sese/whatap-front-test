@@ -68,7 +68,7 @@ const Dashboard: NextPage = () => {
   return (
     <main>
       <section>
-        <Informatics setApiQueue={setApiQueue} data={apiResponse?.[""]} />
+        <Informatics setApiQueue={setApiQueue} data={apiResponse} />
       </section>
       <section>
         <TxBarChartContainer setApiQueue={setApiQueue} data={apiResponse} />

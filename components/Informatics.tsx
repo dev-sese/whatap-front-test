@@ -12,69 +12,37 @@ const Informatics = ({ setApiQueue, data }: InformaticsProps) => {
   // widget type
   const widgetType = "info";
 
-  const afterDelayApiCall = () => {
+  // interval
+  const intervalApiCall = () => {
     setTimeout(() => {
       setApiQueue((prev: any) => [
         ...prev,
-        { key: "actx", type: "spot", widget: widgetType },
+        { key: "act_agent", type: "spot", widget: widgetType },
+        { key: "inact_agent", type: "spot", widget: widgetType },
       ]);
-      afterDelayApiCall();
+      intervalApiCall();
     }, INTERVAL_S5_TIME_CONST);
   };
 
   useEffect(() => {
     setApiQueue((prev: any) => [
       ...prev,
-      { key: "txcount", type: "spot", widget: widgetType },
-      { key: "actx", type: "spot", widget: widgetType },
+      { key: "act_agent", type: "spot", widget: widgetType },
+      { key: "inact_agent", type: "spot", widget: widgetType },
     ]);
-    // afterDelayApiCall();
+    intervalApiCall();
   }, []);
 
   return (
     <div>
-      <span>액티브 트랜젝션 수</span>
-      <span>{data?.data}</span>
+      <p>{`활성화 에이전트 수 ${
+        data["act_agent"] ? data["act_agent"].data : 0
+      }`}</p>
+      <p>{`비활성화 에이전트 수 ${
+        data["inact_agent"] ? data["inact_agent"].data : 0
+      }`}</p>
     </div>
   );
 };
 
 export default Informatics;
-
-// const Informatics = ({ spotKey }: InformaticsProps) => {
-//   const [openApiData, setOpenApiData] = useState<OPEN_API_RESULT>();
-
-//   const intevalApiCall = () => {
-//     // 첫 호출시 바로 실행되는 함수
-//     setTimeout(() => {
-//       api.spot(spotKey).then((result) => setOpenApiData(result));
-//     }, 0);
-//     // 정해진 간격으로 실행되는 함수
-//     const afterDelayApiCall = () => {
-//       setTimeout(() => {
-//         api.spot(spotKey).then((result) => setOpenApiData(result));
-//         afterDelayApiCall();
-//       }, INTERVAL_TIME_CONST);
-//     };
-//     afterDelayApiCall();
-//   };
-
-//   useEffect(() => {
-//     intevalApiCall();
-//   }, []);
-
-//   return (
-//     <div>
-//       {typeof openApiData === "object" && (
-//         <div>
-//           <span>{openApiData.name}</span>
-//           <span>
-//             {typeof openApiData.data === "number" && openApiData.data}
-//           </span>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Informatics;
