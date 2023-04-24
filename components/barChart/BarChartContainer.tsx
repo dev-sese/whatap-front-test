@@ -5,115 +5,118 @@ import { useEffect, useState } from "react";
 import BarChart from "@/components/barChart/BarChart";
 
 interface BarChartContainerProps {
-  title: string;
-  spotKeyList: OPEN_API_EMPTY_STRING_KEYS[];
+  setApiQueue: any;
 }
 
-export const BarChartContainer = ({
-  title,
-  spotKeyList,
-}: BarChartContainerProps) => {
-  // API key 리스트의 값을 object key로 가지는 object 생성
-  const makeDataStateKeys = (spotKeyList: OPEN_API_EMPTY_STRING_KEYS[]) => {
-    let dataObj: { [key: string]: undefined } = {};
-    spotKeyList.map((key: OPEN_API_EMPTY_STRING_KEYS) => {
-      dataObj[key] = undefined;
-    });
-    return dataObj;
-  };
-
-  const [openApiData, setOpenApiData] = useState<{
-    [key: string]: OPEN_API_RESULT | undefined;
-  }>(makeDataStateKeys(spotKeyList));
-
-  // const intevalApiCall = (key: OPEN_API_EMPTY_STRING_KEYS) => {
-  //   // 첫 호출시 바로 실행되는 함수
-  //   setTimeout(() => {
-  //     api
-  //       .spot(key)
-  //       .then((result) =>
-  //         setOpenApiData((prev) => ({ ...prev, [key]: result }))
-  //       );
-  //   }, 10);
-  //   // 정해진 간격으로 실행되는 함수
-  //   const afterDelayApiCall = () => {
-  //     setTimeout(() => {
-  //       api
-  //         .spot(key)
-  //         .then((result) =>
-  //           setOpenApiData((prev) => ({ ...prev, [key]: result }))
-  //         );
-  //       afterDelayApiCall();
-  //     }, INTERVAL_TIME_CONST + 10);
-  //   };
-  //   afterDelayApiCall();
-  // };
-
-  // 첫 호출
-  const firstcaller = (key: any, time: number) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        api
-          .spot(key)
-          .then((result) =>
-            setOpenApiData((prev) => ({ ...prev, [key]: result }))
-          );
-      }, time);
-    });
-  };
-
-  let test: any = undefined;
-
-  // interval 호출
-  const Intervalcaller = (key: any, time: number) => {
-    return new Promise((resolve) => {
-      const interval = () => {
-        setTimeout(() => {
-          api
-            .spot(key)
-            .then((result) =>
-              setOpenApiData((prev) => ({ ...prev, [key]: result }))
-            );
-          interval();
-        }, time);
-      };
-      interval();
-    });
-  };
-
-  const getOpenApi = async (key: any, time: number) => {
-    const result = await firstcaller(key, time);
-    return result;
-  };
-
-  const getOpenApiInterval = async (key: any) => {
-    const result = await Intervalcaller(key, 5000);
-    return result;
-  };
-
-  const firstProcess = async () => {
-    spotKeyList.map(async (key: OPEN_API_EMPTY_STRING_KEYS) => {
-      await getOpenApi(key, 0);
-    });
-  };
-
-  const intervalProcess = async () => {
-    spotKeyList.map(async (key: OPEN_API_EMPTY_STRING_KEYS) => {
-      await getOpenApiInterval(key);
-    });
+export const BarChartContainer = ({ setApiQueue }: BarChartContainerProps) => {
+  const afterDelayApiCall = () => {
+    setTimeout(() => {
+      setApiQueue((prev: any) => [
+        ...prev,
+        { key: "dbconn_total", type: "spot" },
+        { key: "dbconn_act", type: "spot" },
+        { key: "dbconn_idle", type: "spot" },
+      ]);
+      afterDelayApiCall();
+    }, INTERVAL_TIME_CONST);
   };
 
   useEffect(() => {
-    firstProcess();
-    intervalProcess();
-
-    // return intevalApiCall(key);
+    setApiQueue((prev: any) => [
+      ...prev,
+      { key: "dbconn_total", type: "spot" },
+      { key: "dbconn_act", type: "spot" },
+      { key: "dbconn_idle", type: "spot" },
+    ]);
+    afterDelayApiCall();
   }, []);
 
   return (
     <div>
-      <BarChart title={title} apiData={openApiData} labels={spotKeyList} />
-      <pre>{JSON.stringify(openApiData, null, 4)}</pre>
+      {/* <BarChart title={title} apiData={openApiData} labels={spotKeyList} />
+      <pre>{JSON.stringify(openApiData, null, 4)}</pre> */}
     </div>
   );
 };
+
+// export const BarChartContainer = ({
+//   title,
+//   spotKeyList,
+// }: BarChartContainerProps) => {
+//   // API key 리스트의 값을 object key로 가지는 object 생성
+//   const makeDataStateKeys = (spotKeyList: OPEN_API_EMPTY_STRING_KEYS[]) => {
+//     let dataObj: { [key: string]: undefined } = {};
+//     spotKeyList.map((key: OPEN_API_EMPTY_STRING_KEYS) => {
+//       dataObj[key] = undefined;
+//     });
+//     return dataObj;
+//   };
+
+//   const [openApiData, setOpenApiData] = useState<{
+//     [key: string]: OPEN_API_RESULT | undefined;
+//   }>(makeDataStateKeys(spotKeyList));
+
+//   // 첫 호출
+//   const firstcaller = (key: any, time: number) => {
+//     return new Promise(() => {
+//       setTimeout(() => {
+//         api
+//           .spot(key)
+//           .then((result) =>
+//             setOpenApiData((prev) => ({ ...prev, [key]: result }))
+//           )
+//       }, time);
+//     })
+//   };
+
+//   // interval 호출
+//   const Intervalcaller = (key: any, time: number) => {
+//     return new Promise(() => {
+//       const interval = () => {
+//         setTimeout(() => {
+//           api
+//             .spot(key)
+//             .then((result) =>
+//               setOpenApiData((prev) => ({ ...prev, [key]: result }))
+//             );
+//           interval();
+//         }, time);
+//       };
+//       interval();
+//     });
+//   };
+
+//   const getOpenApi = async (key: any, time: number) => {
+//     await firstcaller(key, time);
+//   };
+
+//   const getOpenApiInterval = async (key: any) => {
+//     await Intervalcaller(key, 5000);
+//   };
+
+//   const firstProcess = async () => {
+//     spotKeyList.map(async (key: OPEN_API_EMPTY_STRING_KEYS) => {
+//       await getOpenApi(key, 0);
+//     });
+//   };
+
+//   const intervalProcess = async () => {
+//     spotKeyList.map(async (key: OPEN_API_EMPTY_STRING_KEYS) => {
+//       await getOpenApiInterval(key);
+//     });
+//   };
+
+//   useEffect(() => {
+//     firstProcess();
+//     intervalProcess();
+
+//     // return intevalApiCall(key);
+//   }, []);
+
+//   return (
+//     <div>
+//       <BarChart title={title} apiData={openApiData} labels={spotKeyList} />
+//       <pre>{JSON.stringify(openApiData, null, 4)}</pre>
+//     </div>
+//   );
+// };

@@ -9,37 +9,52 @@ import { useEffect, useState } from "react";
 import LineChart from "./LineChart";
 
 interface LineChartContainerProps {
-  title: string;
-  spotKey: OPEN_API_EMPTY_STRING_KEYS;
+  setApiQueue: any;
 }
 
-const LineChartContainer = ({ title, spotKey }: LineChartContainerProps) => {
-  const [openApiData, setOpenApiData] = useState<any>();
-
-  const intevalApiCall = (key: OPEN_API_EMPTY_STRING_KEYS) => {
-    // 첫 호출시 바로 실행되는 함수
-    setTimeout(() => {
-      api.spot(key).then((result) => setOpenApiData(result.data));
-    }, 10);
-    // 정해진 간격으로 실행되는 함수
-    const afterDelayApiCall = () => {
-      setTimeout(() => {
-        api.spot(key).then((result) => setOpenApiData(result.data));
-        afterDelayApiCall();
-      }, INTERVAL_TIME_CONST + 10);
-    };
-    afterDelayApiCall();
-  };
-
+const LineChartContainer = ({ setApiQueue }: LineChartContainerProps) => {
   useEffect(() => {
-    intevalApiCall(spotKey);
+    setApiQueue((prev: any) => [
+      ...prev,
+      { key: "txcount", type: "spot" },
+      { key: "thread_count/{stime}/{etime}/1387800924", type: "series" },
+    ]);
   }, []);
 
   return (
-    <div>
-      <LineChart title="line chart" apiData={openApiData} />
-    </div>
+    <div>{/* <LineChart title="line chart" apiData={openApiData} /> */}</div>
   );
 };
 
 export default LineChartContainer;
+
+// const LineChartContainer = ({ title, spotKey }: LineChartContainerProps) => {
+//   const [openApiData, setOpenApiData] = useState<any>();
+
+//   const intevalApiCall = (key: OPEN_API_EMPTY_STRING_KEYS) => {
+//     // 첫 호출시 바로 실행되는 함수
+//     setTimeout(() => {
+//       api.spot(key).then((result) => setOpenApiData(result.data));
+//     }, 10);
+//     // 정해진 간격으로 실행되는 함수
+//     const afterDelayApiCall = () => {
+//       setTimeout(() => {
+//         api.spot(key).then((result) => setOpenApiData(result.data));
+//         afterDelayApiCall();
+//       }, INTERVAL_TIME_CONST + 10);
+//     };
+//     afterDelayApiCall();
+//   };
+
+//   useEffect(() => {
+//     intevalApiCall(spotKey);
+//   }, []);
+
+//   return (
+//     <div>
+//       <LineChart title="line chart" apiData={openApiData} />
+//     </div>
+//   );
+// };
+
+// export default LineChartContainer;
