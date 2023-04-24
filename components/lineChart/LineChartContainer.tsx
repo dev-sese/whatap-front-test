@@ -10,19 +10,32 @@ import LineChart from "./LineChart";
 
 interface LineChartContainerProps {
   setApiQueue: any;
+  data: any;
 }
 
-const LineChartContainer = ({ setApiQueue }: LineChartContainerProps) => {
+const LineChartContainer = ({ setApiQueue, data }: LineChartContainerProps) => {
+  // widget type
+  const widgetType = "line_txcount";
+
   useEffect(() => {
     setApiQueue((prev: any) => [
       ...prev,
-      { key: "txcount", type: "spot" },
-      { key: "thread_count/{stime}/{etime}/1387800924", type: "series" },
+      { key: "txcount", type: "spot", widget: widgetType },
+      {
+        key: "thread_count/{stime}/{etime}/1387800924",
+        type: "series",
+        widget: widgetType,
+      },
     ]);
   }, []);
 
   return (
-    <div>{/* <LineChart title="line chart" apiData={openApiData} /> */}</div>
+    <div>
+      <LineChart
+        title="line chart"
+        apiData={data?.data?.objects ? data?.data?.objects : []}
+      />
+    </div>
   );
 };
 

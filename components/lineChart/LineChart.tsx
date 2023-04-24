@@ -23,42 +23,54 @@ ChartJS.register(
 
 interface BarChartProps {
   title: string;
-  apiData: number;
+  apiData: { series: number[][] }[] | [];
   labels?: OPEN_API_EMPTY_STRING_KEYS[];
 }
 
 const LineChart = ({ title, apiData, labels }: BarChartProps) => {
-  const [labelList, setLabelList] = useState<any>([]);
-  const [dataSet, setDataSet] = useState<any>([]);
-
-  useEffect(() => {
-    if (apiData) {
-      const currentTime: any = new Date();
-      setLabelList((prev: any) =>
-        adjustingLength(
-          prev,
-          `${currentTime.getMinutes()}:${currentTime.getSeconds()}`
-        )
+  const getLabelData = (firstDataList: { series: number[][] }[] | []) => {
+    if (firstDataList.length === 0) {
+      return [];
+    }
+    let seriesData = firstDataList?.length !== 0 ? firstDataList[0].series : [];
+    let chartLabelData = [];
+    for (let i = 0; i < seriesData.length; i++) {
+      let time = new Date(seriesData[i][0]);
+      chartLabelData.push(
+        `${time.getHours() < 10 ? "0" + time.getHours() : time.getHours()}:${
+          time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes()
+        }`
       );
-      setDataSet((prev: any) => adjustingLength(prev, apiData));
     }
-  }, [apiData]);
-
-  const adjustingLength = (prev: any, apiData: any) => {
-    if (prev.length === 120) {
-      prev.shift();
-      return [...prev, apiData];
-    }
-    return [...prev, apiData];
+    return chartLabelData;
   };
 
+  const getData = (firstDataList: any) => {
+    if (firstDataList?.length === 0) {
+      return [];
+    }
+    let seriesData = firstDataList[0].series;
+    let chartData = [];
+    for (let i = 0; i < seriesData.length; i++) {
+      chartData.push(seriesData[i][1]);
+    }
+    return chartData;
+  };
   const changeApiDataToChartData = () => {
     return {
-      labels: labelList,
+      labels: getLabelData(apiData),
       datasets: [
         {
-          data: dataSet,
+          label: "yesterday",
+          data: getData(apiData),
         },
+        // {
+        //   label: "today",
+        //   data: todayData,
+        //   borderColor: "rgb(54, 162, 235)",
+        //   backgroundColor: "rgba(54, 162, 235, 0.2)",
+        //   fill: true,
+        // },
       ],
     };
   };

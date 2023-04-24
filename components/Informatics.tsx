@@ -5,12 +5,19 @@ import { INTERVAL_TIME_CONST } from "@/common/const";
 
 interface InformaticsProps {
   setApiQueue: any;
+  data: any;
 }
 
-const Informatics = ({ setApiQueue }: InformaticsProps) => {
+const Informatics = ({ setApiQueue, data }: InformaticsProps) => {
+  // widget type
+  const widgetType = "info";
+
   const afterDelayApiCall = () => {
     setTimeout(() => {
-      setApiQueue((prev: any) => [...prev, { key: "actx", type: "spot" }]);
+      setApiQueue((prev: any) => [
+        ...prev,
+        { key: "actx", type: "spot", widget: widgetType },
+      ]);
       afterDelayApiCall();
     }, INTERVAL_TIME_CONST);
   };
@@ -18,22 +25,16 @@ const Informatics = ({ setApiQueue }: InformaticsProps) => {
   useEffect(() => {
     setApiQueue((prev: any) => [
       ...prev,
-      { key: "txcount", type: "spot" },
-      { key: "actx", type: "spot" },
+      { key: "txcount", type: "spot", widget: widgetType },
+      { key: "actx", type: "spot", widget: widgetType },
     ]);
     afterDelayApiCall();
   }, []);
 
   return (
     <div>
-      {/* {typeof openApiData === "object" && (
-        <div>
-          <span>{openApiData.name}</span>
-          <span>
-            {typeof openApiData.data === "number" && openApiData.data}
-          </span>
-        </div>
-      )} */}
+      <span>액티브 트랜젝션 수</span>
+      <span>{data?.data}</span>
     </div>
   );
 };

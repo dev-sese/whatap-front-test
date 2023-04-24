@@ -6,16 +6,23 @@ import BarChart from "@/components/barChart/BarChart";
 
 interface BarChartContainerProps {
   setApiQueue: any;
+  data: any;
 }
 
-export const BarChartContainer = ({ setApiQueue }: BarChartContainerProps) => {
+export const BarChartContainer = ({
+  setApiQueue,
+  data,
+}: BarChartContainerProps) => {
+  // widget type
+  const widgetType = "bar_db";
+
   const afterDelayApiCall = () => {
     setTimeout(() => {
       setApiQueue((prev: any) => [
         ...prev,
-        { key: "dbconn_total", type: "spot" },
-        { key: "dbconn_act", type: "spot" },
-        { key: "dbconn_idle", type: "spot" },
+        { key: "dbconn_total", type: "spot", widget: widgetType },
+        { key: "dbconn_act", type: "spot", widget: widgetType },
+        { key: "dbconn_idle", type: "spot", widget: widgetType },
       ]);
       afterDelayApiCall();
     }, INTERVAL_TIME_CONST);
@@ -24,17 +31,16 @@ export const BarChartContainer = ({ setApiQueue }: BarChartContainerProps) => {
   useEffect(() => {
     setApiQueue((prev: any) => [
       ...prev,
-      { key: "dbconn_total", type: "spot" },
-      { key: "dbconn_act", type: "spot" },
-      { key: "dbconn_idle", type: "spot" },
+      { key: "dbconn_total", type: "spot", widget: widgetType },
+      { key: "dbconn_act", type: "spot", widget: widgetType },
+      { key: "dbconn_idle", type: "spot", widget: widgetType },
     ]);
     afterDelayApiCall();
   }, []);
 
   return (
     <div>
-      {/* <BarChart title={title} apiData={openApiData} labels={spotKeyList} />
-      <pre>{JSON.stringify(openApiData, null, 4)}</pre> */}
+      <BarChart title={"DB"} apiData={[data?.data]} labels={["dbconn_total"]} />
     </div>
   );
 };

@@ -27,7 +27,7 @@ ChartJS.register(
 
 interface BarChartProps {
   title: string;
-  apiData: { [key: string]: OPEN_API_RESULT | undefined };
+  apiData: any;
   labels: OPEN_API_EMPTY_STRING_KEYS[];
 }
 
@@ -36,13 +36,13 @@ const BarChart = ({ title, apiData, labels }: BarChartProps) => {
     apiData: any,
     labels: OPEN_API_EMPTY_STRING_KEYS[]
   ) => {
-    let dataSets: number[] = [];
-    labels.map((label: any) => dataSets.push(apiData[label]?.data));
+    // let dataSets: number[] = [];
+    // labels.map((label: any) => dataSets.push(apiData[label]?.data));
     return {
       labels: labels,
       datasets: [
         {
-          data: dataSets,
+          data: [apiData],
           backgroundColor: barChartBackgroundColor,
           borderColor: barChartBorderColor,
           borderWidth: barChartBorderWidth,

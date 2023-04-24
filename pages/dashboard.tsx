@@ -4,31 +4,63 @@ import type { NextPage } from "next";
 import LineChartContainer from "@/components/lineChart/LineChartContainer";
 import { useEffect, useState } from "react";
 import api from "@/pages/api/openApi";
+import {
+  OPEN_API_EMPTY_STRING_KEYS,
+  OPEN_API_JSON_KEYS,
+  OPEN_API_RESULT,
+} from "@/common/types";
 
 const Dashboard: NextPage = () => {
-  const [apiQueue, setApiQueue] = useState<any>([]);
+  // API 큐
+  const [apiQueue, setApiQueue] = useState<
+    {
+      type: string;
+      key: OPEN_API_EMPTY_STRING_KEYS | OPEN_API_JSON_KEYS;
+      widget: string;
+    }[]
+  >([]);
 
+  // 결과값 저장
+  const [apiResponse, setApiResponse] = useState<{
+    [key: string]: OPEN_API_RESULT;
+  }>({});
+
+  console.log(apiResponse);
+
+  // 큐에 변화가 생기면 API 호출
   useEffect(() => {
     if (apiQueue.length !== 0) {
       let currentQueue = apiQueue;
       let currentApi = currentQueue.slice(0, 1)[0];
       switch (currentApi.type) {
         case "spot":
-          api
-            .spot(currentApi.key)
-            .then((result) => setApiQueue(currentQueue.slice(1)));
+          try {
+            api.spot(currentApi.key).then((result) => {
+              setApiResponse({ ...apiResponse, [currentApi.widget]: result });
+              setApiQueue(currentQueue.slice(1));
+            });
+          } catch (e) {
+            console.log("error", e);
+          }
           break;
         case "series":
-          let today = new Date();
-          today.setDate(today.getDate() - 1);
-          let yesterdayStart = today.setHours(0, 0, 0);
-          let yesterdayEnd = today.setHours(23, 59, 59);
-          api
-            .series(currentApi.key, {
-              stime: yesterdayStart,
-              etime: yesterdayEnd,
-            })
-            .then((result) => setApiQueue(currentQueue.slice(1)));
+          try {
+            let today = new Date();
+            today.setDate(today.getDate() - 1);
+            let yesterdayStart = today.setHours(0, 0, 0);
+            let yesterdayEnd = today.setHours(23, 59, 59);
+            api
+              .series(currentApi.key, {
+                stime: yesterdayStart,
+                etime: yesterdayEnd,
+              })
+              .then((result) => {
+                setApiResponse({ ...apiResponse, [currentApi.widget]: result });
+                setApiQueue(currentQueue.slice(1));
+              });
+          } catch (e) {
+            console.log("error", e);
+          }
           break;
       }
     }
@@ -37,13 +69,19 @@ const Dashboard: NextPage = () => {
   return (
     <main>
       <section>
-        <Informatics setApiQueue={setApiQueue} />
+        <Informatics setApiQueue={setApiQueue} data={apiResponse?.info} />
       </section>
       <section>
-        <BarChartContainer setApiQueue={setApiQueue} />
+        <BarChartContainer
+          setApiQueue={setApiQueue}
+          data={apiResponse?.["bar_db"]}
+        />
       </section>
       <section>
-        <LineChartContainer setApiQueue={setApiQueue} />
+        <LineChartContainer
+          setApiQueue={setApiQueue}
+          data={apiResponse?.["line_txcount"]}
+        />
       </section>
     </main>
   );
