@@ -1,4 +1,4 @@
-import { INTERVAL_TIME_CONST } from "@/common/const";
+import { INTERVAL_S5_TIME_CONST } from "@/common/const";
 import { OPEN_API_EMPTY_STRING_KEYS, OPEN_API_RESULT } from "@/common/types";
 import api from "@/pages/api/openApi";
 import { useEffect, useState } from "react";
@@ -25,7 +25,7 @@ export const BarChartContainer = ({
         { key: "dbconn_idle", type: "spot", widget: widgetType },
       ]);
       afterDelayApiCall();
-    }, INTERVAL_TIME_CONST);
+    }, INTERVAL_S5_TIME_CONST);
   };
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export const BarChartContainer = ({
       { key: "dbconn_act", type: "spot", widget: widgetType },
       { key: "dbconn_idle", type: "spot", widget: widgetType },
     ]);
-    afterDelayApiCall();
+    // afterDelayApiCall();
   }, []);
 
   return (

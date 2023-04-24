@@ -1,7 +1,7 @@
 import { OPEN_API_EMPTY_STRING_KEYS, OPEN_API_RESULT } from "@/common/types";
 import { useEffect, useState } from "react";
 import api from "@/pages/api/openApi";
-import { INTERVAL_TIME_CONST } from "@/common/const";
+import { INTERVAL_S5_TIME_CONST } from "@/common/const";
 
 interface InformaticsProps {
   setApiQueue: any;
@@ -19,7 +19,7 @@ const Informatics = ({ setApiQueue, data }: InformaticsProps) => {
         { key: "actx", type: "spot", widget: widgetType },
       ]);
       afterDelayApiCall();
-    }, INTERVAL_TIME_CONST);
+    }, INTERVAL_S5_TIME_CONST);
   };
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const Informatics = ({ setApiQueue, data }: InformaticsProps) => {
       { key: "txcount", type: "spot", widget: widgetType },
       { key: "actx", type: "spot", widget: widgetType },
     ]);
-    afterDelayApiCall();
+    // afterDelayApiCall();
   }, []);
 
   return (

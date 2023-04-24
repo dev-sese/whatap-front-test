@@ -17,6 +17,8 @@ const Dashboard: NextPage = () => {
       type: string;
       key: OPEN_API_EMPTY_STRING_KEYS | OPEN_API_JSON_KEYS;
       widget: string;
+      etime?: number;
+      stime?: number;
     }[]
   >([]);
 
@@ -33,6 +35,7 @@ const Dashboard: NextPage = () => {
       let currentQueue = apiQueue;
       let currentApi = currentQueue.slice(0, 1)[0];
       switch (currentApi.type) {
+        // spot성 데이터 호출
         case "spot":
           try {
             api.spot(currentApi.key).then((result) => {
@@ -43,16 +46,13 @@ const Dashboard: NextPage = () => {
             console.log("error", e);
           }
           break;
+        // 통계성 데이터 호출
         case "series":
           try {
-            let today = new Date();
-            today.setDate(today.getDate() - 1);
-            let yesterdayStart = today.setHours(0, 0, 0);
-            let yesterdayEnd = today.setHours(23, 59, 59);
             api
               .series(currentApi.key, {
-                stime: yesterdayStart,
-                etime: yesterdayEnd,
+                stime: currentApi.stime!,
+                etime: currentApi.etime!,
               })
               .then((result) => {
                 setApiResponse({ ...apiResponse, [currentApi.widget]: result });

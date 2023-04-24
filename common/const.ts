@@ -47,6 +47,7 @@ export const OPEN_API = {
 };
 
 // 데이터 갱신 주기(5초)
-export const INTERVAL_TIME_CONST = 5 * 1000;
+export const INTERVAL_S5_TIME_CONST = 5 * 1000;
 
-// 이전 데이터
+// 데이터 갱신 주기(5분)
+export const INTERVAL_M5_TIME_CONST = 5 * 60 * 1000;
