@@ -16,31 +16,6 @@ interface LineChartContainerProps {
 const LineChartContainer = ({ title, spotKey }: LineChartContainerProps) => {
   const [openApiData, setOpenApiData] = useState<any>();
 
-  // const intevalApiCall = (key: OPEN_API_JSON_KEYS) => {
-  //   // 첫 호출시 바로 실행되는 함수
-  //   setTimeout(() => {
-  //     api
-  //       .series(key, {
-  //         stime: Date.now() - 3600000,
-  //         etime: Date.now(),
-  //       })
-  //       .then((result) => setOpenApiData(result));
-  //   }, 0);
-  //   // 정해진 간격으로 실행되는 함수
-  //   const afterDelayApiCall = () => {
-  //     setTimeout(() => {
-  //       api
-  //         .series(key, {
-  //           stime: Date.now() - 300000,
-  //           etime: Date.now(),
-  //         })
-  //         .then((result) => setOpenApiData(result));
-  //       afterDelayApiCall();
-  //     }, INTERVAL_TIME_CONST);
-  //   };
-  //   afterDelayApiCall();
-  // };
-
   const intevalApiCall = (key: OPEN_API_EMPTY_STRING_KEYS) => {
     // 첫 호출시 바로 실행되는 함수
     setTimeout(() => {

@@ -37,7 +37,7 @@ const LineChart = ({ title, apiData, labels }: BarChartProps) => {
       setLabelList((prev: any) =>
         adjustingLength(
           prev,
-          `${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}`
+          `${currentTime.getMinutes()}:${currentTime.getSeconds()}`
         )
       );
       setDataSet((prev: any) => adjustingLength(prev, apiData));
@@ -45,7 +45,7 @@ const LineChart = ({ title, apiData, labels }: BarChartProps) => {
   }, [apiData]);
 
   const adjustingLength = (prev: any, apiData: any) => {
-    if (prev.length === 20) {
+    if (prev.length === 120) {
       prev.shift();
       return [...prev, apiData];
     }

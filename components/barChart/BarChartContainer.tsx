@@ -26,33 +26,88 @@ export const BarChartContainer = ({
     [key: string]: OPEN_API_RESULT | undefined;
   }>(makeDataStateKeys(spotKeyList));
 
-  const intevalApiCall = (key: OPEN_API_EMPTY_STRING_KEYS) => {
-    // 첫 호출시 바로 실행되는 함수
-    setTimeout(() => {
-      api
-        .spot(key)
-        .then((result) =>
-          setOpenApiData((prev) => ({ ...prev, [key]: result }))
-        );
-    }, 10);
-    // 정해진 간격으로 실행되는 함수
-    const afterDelayApiCall = () => {
+  // const intevalApiCall = (key: OPEN_API_EMPTY_STRING_KEYS) => {
+  //   // 첫 호출시 바로 실행되는 함수
+  //   setTimeout(() => {
+  //     api
+  //       .spot(key)
+  //       .then((result) =>
+  //         setOpenApiData((prev) => ({ ...prev, [key]: result }))
+  //       );
+  //   }, 10);
+  //   // 정해진 간격으로 실행되는 함수
+  //   const afterDelayApiCall = () => {
+  //     setTimeout(() => {
+  //       api
+  //         .spot(key)
+  //         .then((result) =>
+  //           setOpenApiData((prev) => ({ ...prev, [key]: result }))
+  //         );
+  //       afterDelayApiCall();
+  //     }, INTERVAL_TIME_CONST + 10);
+  //   };
+  //   afterDelayApiCall();
+  // };
+
+  // 첫 호출
+  const firstcaller = (key: any, time: number) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         api
           .spot(key)
           .then((result) =>
             setOpenApiData((prev) => ({ ...prev, [key]: result }))
           );
-        afterDelayApiCall();
-      }, INTERVAL_TIME_CONST + 10);
-    };
-    afterDelayApiCall();
+      }, time);
+    });
+  };
+
+  let test: any = undefined;
+
+  // interval 호출
+  const Intervalcaller = (key: any, time: number) => {
+    return new Promise((resolve) => {
+      const interval = () => {
+        setTimeout(() => {
+          api
+            .spot(key)
+            .then((result) =>
+              setOpenApiData((prev) => ({ ...prev, [key]: result }))
+            );
+          interval();
+        }, time);
+      };
+      interval();
+    });
+  };
+
+  const getOpenApi = async (key: any, time: number) => {
+    const result = await firstcaller(key, time);
+    return result;
+  };
+
+  const getOpenApiInterval = async (key: any) => {
+    const result = await Intervalcaller(key, 5000);
+    return result;
+  };
+
+  const firstProcess = async () => {
+    spotKeyList.map(async (key: OPEN_API_EMPTY_STRING_KEYS) => {
+      await getOpenApi(key, 0);
+    });
+  };
+
+  const intervalProcess = async () => {
+    spotKeyList.map(async (key: OPEN_API_EMPTY_STRING_KEYS) => {
+      await getOpenApiInterval(key);
+    });
   };
 
   useEffect(() => {
-    spotKeyList.map((key: OPEN_API_EMPTY_STRING_KEYS) => {
-      return intevalApiCall(key);
-    });
+    firstProcess();
+    intervalProcess();
+
+    // return intevalApiCall(key);
   }, []);
 
   return (

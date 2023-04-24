@@ -10,15 +10,19 @@ import LineChartContainerTest from "@/components/lineChart/LineChartContainerTes
 const Dashboard: NextPage = () => {
   return (
     <main>
-      {/* <section>
-        <Informatics spotKey="act_agent" />
-      </section> */}
       <section>
-        {/* <BarChartContainer
+        <Informatics spotKey="act_agent" />
+      </section>
+      <section>
+        <BarChartContainer
           title={"트렌젝션"}
           spotKeyList={["txcount", "actx"]}
         />
-        <BarChartContainerTest
+        <BarChartContainer
+          title={"DB connection"}
+          spotKeyList={["dbconn_total", "dbconn_act", "dbconn_idle"]}
+        />
+        {/* <BarChartContainerTest
           title={"DB connection"}
           spotKeyList={["dbconn_total", "dbconn_act", "dbconn_idle"]}
         /> */}
