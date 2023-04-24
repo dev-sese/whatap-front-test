@@ -1,7 +1,7 @@
 import Informatics from "@/components/Informatics";
 import type { NextPage } from "next";
 import LineChartContainer from "@/components/lineChart/LineChartContainer";
-import { useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import api from "@/pages/api/openApi";
 import {
   OPEN_API_EMPTY_STRING_KEYS,
@@ -14,6 +14,17 @@ import MmLineChartContainer from "@/components/lineChart/MmLineChartContainer";
 import ScLineChartContainer from "@/components/lineChart/ScLineChartContainer";
 
 const Dashboard: NextPage = () => {
+  // 일시정지 관리
+  const [pause, setPause] = useState(false);
+  const PrevPauseRef = useRef<boolean>(pause);
+
+  useEffect(() => {
+    // 정지에서 시작으로 변하면 기존에 쌓여있던 큐를 초기화한다
+    if (PrevPauseRef.current && !pause) {
+      setApiQueue([]);
+    }
+  }, [pause]);
+
   // API 큐
   const [apiQueue, setApiQueue] = useState<
     {
@@ -33,6 +44,9 @@ const Dashboard: NextPage = () => {
 
   // 큐에 변화가 생기면 API 호출
   useEffect(() => {
+    if (pause) {
+      return;
+    }
     if (apiQueue.length !== 0) {
       let currentQueue = apiQueue;
       let currentApi = currentQueue.slice(0, 1)[0];
@@ -70,6 +84,20 @@ const Dashboard: NextPage = () => {
 
   return (
     <main>
+      <button
+        onClick={() => {
+          setPause(true), (PrevPauseRef.current = false);
+        }}
+      >
+        일시정지
+      </button>
+      <button
+        onClick={() => {
+          setPause(false), (PrevPauseRef.current = true);
+        }}
+      >
+        재시작
+      </button>
       <section>
         <Informatics setApiQueue={setApiQueue} data={apiResponse} />
       </section>
