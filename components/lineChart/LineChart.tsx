@@ -1,4 +1,4 @@
-import { OPEN_API_EMPTY_STRING_KEYS, OPEN_API_RESULT } from "@/common/types";
+import { OPEN_API_RESULT } from "@/common/types";
 import { Line } from "react-chartjs-2";
 import { lineChartOption } from "@/components/lineChart/LineChartConfig";
 import {
@@ -28,8 +28,7 @@ interface LineChartProps {
 }
 
 const LineChart = ({ title, apiData }: LineChartProps) => {
-  console.log(apiData);
-
+  // 데이터 관리
   const [yesterdayData, setYesterdayData] = useState(apiData["yesterday"]);
   const [todayData, setTodayData] = useState(apiData["today"]);
 
@@ -45,6 +44,7 @@ const LineChart = ({ title, apiData }: LineChartProps) => {
     }
   }, [apiData["today"]]);
 
+  // 라벨 정제
   const getLabelData = (yesterdayData: OPEN_API_RESULT | undefined) => {
     let seriesData = yesterdayData?.data.objects[0].series;
     let chartLabelData = [];
@@ -59,6 +59,7 @@ const LineChart = ({ title, apiData }: LineChartProps) => {
     return chartLabelData;
   };
 
+  // 어제 데이터 정제
   const getYesterdayData = (yesterdayData: OPEN_API_RESULT | undefined) => {
     let seriesData = yesterdayData?.data.objects[0].series;
     let chartData = [];
@@ -68,6 +69,7 @@ const LineChart = ({ title, apiData }: LineChartProps) => {
     return chartData;
   };
 
+  // 오늘 데이터 정제
   const getTodayData = (todayData: OPEN_API_RESULT | undefined) => {
     let seriesData = todayData?.data.objects[0].series;
     let chartData = [];
@@ -77,6 +79,7 @@ const LineChart = ({ title, apiData }: LineChartProps) => {
     return chartData;
   };
 
+  // 차트 데이터로 가공
   const changeApiDataToChartData = () => {
     return {
       labels: getLabelData(yesterdayData),

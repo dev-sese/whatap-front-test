@@ -10,6 +10,8 @@ import {
 } from "@/common/types";
 import DbBarChartContainer from "@/components/barChart/DbBarChartContainer";
 import TxBarChartContainer from "@/components/barChart/TxBarChartContainer";
+import MmLineChartContainer from "@/components/lineChart/MmLineChartContainer";
+import ScLineChartContainer from "@/components/lineChart/ScLineChartContainer";
 
 const Dashboard: NextPage = () => {
   // API 큐
@@ -76,7 +78,8 @@ const Dashboard: NextPage = () => {
         <DbBarChartContainer setApiQueue={setApiQueue} data={apiResponse} />
       </section>
       <section>
-        <LineChartContainer setApiQueue={setApiQueue} data={apiResponse} />
+        <MmLineChartContainer setApiQueue={setApiQueue} data={apiResponse} />
+        <ScLineChartContainer setApiQueue={setApiQueue} data={apiResponse} />
       </section>
     </main>
   );
