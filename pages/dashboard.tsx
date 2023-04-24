@@ -98,17 +98,27 @@ const Dashboard: NextPage = () => {
       >
         재시작
       </button>
-      <section>
-        <Informatics setApiQueue={setApiQueue} data={apiResponse} />
-      </section>
-      <section>
-        <TxBarChartContainer setApiQueue={setApiQueue} data={apiResponse} />
-        <DbBarChartContainer setApiQueue={setApiQueue} data={apiResponse} />
-      </section>
-      <section>
-        <MmLineChartContainer setApiQueue={setApiQueue} data={apiResponse} />
-        <ScLineChartContainer setApiQueue={setApiQueue} data={apiResponse} />
-      </section>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "30px",
+          flexWrap: "wrap",
+        }}
+      >
+        <section>
+          <Informatics setApiQueue={setApiQueue} data={apiResponse} />
+        </section>
+        <section>
+          <TxBarChartContainer setApiQueue={setApiQueue} data={apiResponse} />
+          <DbBarChartContainer setApiQueue={setApiQueue} data={apiResponse} />
+        </section>
+        <section>
+          <MmLineChartContainer setApiQueue={setApiQueue} data={apiResponse} />
+          <ScLineChartContainer setApiQueue={setApiQueue} data={apiResponse} />
+        </section>
+      </div>
     </main>
   );
 };

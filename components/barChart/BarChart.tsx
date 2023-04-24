@@ -61,6 +61,7 @@ const BarChart = ({ title, apiData, list }: BarChartProps) => {
     <Bar
       options={barChartOption(title)}
       data={changeApiDataToChartData(apiData)}
+      style={{ width: "300px" }}
     />
   );
 };

@@ -6,7 +6,7 @@ export const barChartOption = (title: string) => {
         borderWidth: 2,
       },
     },
-    responsive: true,
+    responsive: false,
     plugins: {
       title: {
         display: true,

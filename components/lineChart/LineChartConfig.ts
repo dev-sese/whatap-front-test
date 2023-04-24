@@ -1,5 +1,6 @@
 export const lineChartOption = (title: string) => {
   const options = {
+    responsive: false,
     plugins: {
       title: {
         display: true,
