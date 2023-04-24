@@ -23,11 +23,10 @@ const LineChartContainer = ({ setApiQueue, data }: LineChartContainerProps) => {
   currentEndTimeRef.current = etime;
 
   useEffect(() => {
-    if (data) {
-      console.log(data?.data.etime, etime);
-      setEtime(data?.data.etime);
+    if (data["today"]) {
+      setEtime(data?.["today"].data.etime);
     }
-  }, [data]);
+  }, [data["today"]]);
 
   // interval 호출
   const intervalApiCall = () => {
@@ -40,6 +39,7 @@ const LineChartContainer = ({ setApiQueue, data }: LineChartContainerProps) => {
           widget: widgetType,
           stime: currentEndTimeRef.current,
           etime: Date.now(),
+          time: "today",
         },
       ]);
       intervalApiCall();
@@ -62,6 +62,7 @@ const LineChartContainer = ({ setApiQueue, data }: LineChartContainerProps) => {
         widget: widgetType,
         stime: yesterdayStart,
         etime: yesterdayEnd,
+        time: "yesterday",
       },
       {
         key: "thread_count/{stime}/{etime}/1387800924",
@@ -69,6 +70,7 @@ const LineChartContainer = ({ setApiQueue, data }: LineChartContainerProps) => {
         widget: widgetType,
         stime: todayStart,
         etime: etime,
+        time: "today",
       },
     ]);
     intervalApiCall();
@@ -77,42 +79,12 @@ const LineChartContainer = ({ setApiQueue, data }: LineChartContainerProps) => {
   return (
     <div>
       <LineChart
-        title="line chart"
-        apiData={data?.data?.objects ? data?.data?.objects : []}
+        title="thread_count"
+        apiData={data}
+        list={["yesterday", "today"]}
       />
     </div>
   );
 };
 
 export default LineChartContainer;
-
-// const LineChartContainer = ({ title, spotKey }: LineChartContainerProps) => {
-//   const [openApiData, setOpenApiData] = useState<any>();
-
-//   const intevalApiCall = (key: OPEN_API_EMPTY_STRING_KEYS) => {
-//     // 첫 호출시 바로 실행되는 함수
-//     setTimeout(() => {
-//       api.spot(key).then((result) => setOpenApiData(result.data));
-//     }, 10);
-//     // 정해진 간격으로 실행되는 함수
-//     const afterDelayApiCall = () => {
-//       setTimeout(() => {
-//         api.spot(key).then((result) => setOpenApiData(result.data));
-//         afterDelayApiCall();
-//       }, INTERVAL_TIME_CONST + 10);
-//     };
-//     afterDelayApiCall();
-//   };
-
-//   useEffect(() => {
-//     intevalApiCall(spotKey);
-//   }, []);
-
-//   return (
-//     <div>
-//       <LineChart title="line chart" apiData={openApiData} />
-//     </div>
-//   );
-// };
-
-// export default LineChartContainer;

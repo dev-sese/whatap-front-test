@@ -20,6 +20,7 @@ const Dashboard: NextPage = () => {
       widget: string;
       etime?: number;
       stime?: number;
+      time: string;
     }[]
   >([]);
 
@@ -54,7 +55,7 @@ const Dashboard: NextPage = () => {
                 etime: currentApi.etime!,
               })
               .then((result) => {
-                setApiResponse({ ...apiResponse, [currentApi.key]: result });
+                setApiResponse({ ...apiResponse, [currentApi.time]: result });
                 setApiQueue(currentQueue.slice(1));
               });
           } catch (e) {
@@ -75,10 +76,7 @@ const Dashboard: NextPage = () => {
         <DbBarChartContainer setApiQueue={setApiQueue} data={apiResponse} />
       </section>
       <section>
-        <LineChartContainer
-          setApiQueue={setApiQueue}
-          data={apiResponse?.["line_txcount"]}
-        />
+        <LineChartContainer setApiQueue={setApiQueue} data={apiResponse} />
       </section>
     </main>
   );

@@ -7,5 +7,5 @@ export type OPEN_API_JSON_KEYS = keyof typeof OPEN_API["json"];
 export type OPEN_API_RESULT = {
   key: string;
   name: string;
-  data: number | any;
+  data: any;
 };

@@ -21,20 +21,34 @@ ChartJS.register(
   Tooltip
 );
 
-interface BarChartProps {
+interface LineChartProps {
   title: string;
-  apiData: { series: number[][] }[] | [];
-  labels?: OPEN_API_EMPTY_STRING_KEYS[];
+  apiData: { [key: string]: OPEN_API_RESULT };
+  list: string[];
 }
 
-const LineChart = ({ title, apiData, labels }: BarChartProps) => {
-  const getLabelData = (firstDataList: { series: number[][] }[] | []) => {
-    if (firstDataList.length === 0) {
-      return [];
+const LineChart = ({ title, apiData }: LineChartProps) => {
+  console.log(apiData);
+
+  const [yesterdayData, setYesterdayData] = useState(apiData["yesterday"]);
+  const [todayData, setTodayData] = useState(apiData["today"]);
+
+  useEffect(() => {
+    if (apiData["yesterday"]) {
+      setYesterdayData(apiData["yesterday"]);
     }
-    let seriesData = firstDataList?.length !== 0 ? firstDataList[0].series : [];
+  }, [apiData["yesterday"]]);
+
+  useEffect(() => {
+    if (apiData["today"]) {
+      setTodayData(apiData["today"]);
+    }
+  }, [apiData["today"]]);
+
+  const getLabelData = (yesterdayData: OPEN_API_RESULT | undefined) => {
+    let seriesData = yesterdayData?.data.objects[0].series;
     let chartLabelData = [];
-    for (let i = 0; i < seriesData.length; i++) {
+    for (let i = 0; i < seriesData?.length; i++) {
       let time = new Date(seriesData[i][0]);
       chartLabelData.push(
         `${time.getHours() < 10 ? "0" + time.getHours() : time.getHours()}:${
@@ -45,32 +59,39 @@ const LineChart = ({ title, apiData, labels }: BarChartProps) => {
     return chartLabelData;
   };
 
-  const getData = (firstDataList: any) => {
-    if (firstDataList?.length === 0) {
-      return [];
-    }
-    let seriesData = firstDataList[0].series;
+  const getYesterdayData = (yesterdayData: OPEN_API_RESULT | undefined) => {
+    let seriesData = yesterdayData?.data.objects[0].series;
     let chartData = [];
-    for (let i = 0; i < seriesData.length; i++) {
+    for (let i = 0; i < seriesData?.length; i++) {
       chartData.push(seriesData[i][1]);
     }
     return chartData;
   };
+
+  const getTodayData = (todayData: OPEN_API_RESULT | undefined) => {
+    let seriesData = todayData?.data.objects[0].series;
+    let chartData = [];
+    for (let i = 0; i < seriesData?.length; i++) {
+      chartData.push(seriesData[i][1]);
+    }
+    return chartData;
+  };
+
   const changeApiDataToChartData = () => {
     return {
-      labels: getLabelData(apiData),
+      labels: getLabelData(yesterdayData),
       datasets: [
         {
           label: "yesterday",
-          data: getData(apiData),
+          data: getYesterdayData(yesterdayData),
         },
-        // {
-        //   label: "today",
-        //   data: todayData,
-        //   borderColor: "rgb(54, 162, 235)",
-        //   backgroundColor: "rgba(54, 162, 235, 0.2)",
-        //   fill: true,
-        // },
+        {
+          label: "today",
+          data: getTodayData(todayData),
+          borderColor: "rgb(54, 162, 235)",
+          backgroundColor: "rgba(54, 162, 235, 0.2)",
+          fill: true,
+        },
       ],
     };
   };
