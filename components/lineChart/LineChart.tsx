@@ -25,12 +25,20 @@ interface LineChartProps {
   title: string;
   apiData: { [key: string]: OPEN_API_RESULT };
   list: string[];
+  todayReset: boolean;
 }
 
-const LineChart = ({ title, apiData }: LineChartProps) => {
+const LineChart = ({ title, apiData, todayReset }: LineChartProps) => {
   // 데이터 관리
   const [yesterdayData, setYesterdayData] = useState(apiData["yesterday"]);
   const [todayData, setTodayData] = useState([]);
+
+  // todayData reset
+  useEffect(() => {
+    if (todayReset) {
+      setTodayData([]);
+    }
+  }, [todayReset]);
 
   // 데이터 정제
   const getDailyData = (dailyData: OPEN_API_RESULT | undefined) => {

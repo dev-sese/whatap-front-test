@@ -25,6 +25,31 @@ const MmLineChartContainer = ({
     }
   }, [data["today"]]);
 
+  // 일이 변경되면 어제 데이터를 다시 가져옴 & 오늘 데이터 초기화
+  const [todayReset, setTodayReset] = useState(false);
+  useEffect(() => {
+    setTodayReset(false);
+    let etimeDate = new Date(etime).getDate();
+    let current = new Date();
+    if (etimeDate !== current.getDate()) {
+      setTodayReset(true);
+      current.setDate(current.getDate() - 1);
+      let yesterdayStart = current.setHours(0, 0, 0);
+      let yesterdayEnd = current.setHours(23, 59, 59);
+      setApiQueue((prev: any) => [
+        ...prev,
+        {
+          key: "thread_count/{stime}/{etime}/1387800924",
+          type: "series",
+          widget: widgetType,
+          stime: yesterdayStart,
+          etime: yesterdayEnd,
+          time: "yesterday",
+        },
+      ]);
+    }
+  }, [etime]);
+
   // interval 호출
   const intervalApiCall = () => {
     setTimeout(() => {
@@ -79,6 +104,7 @@ const MmLineChartContainer = ({
         title="THREDA COUNT"
         apiData={data}
         list={["yesterday", "today"]}
+        todayReset={todayReset}
       />
     </div>
   );
