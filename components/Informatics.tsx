@@ -1,6 +1,4 @@
-import { OPEN_API_EMPTY_STRING_KEYS, OPEN_API_RESULT } from "@/common/types";
-import { useEffect, useState } from "react";
-import api from "@/pages/api/openApi";
+import { useEffect, useRef, useState } from "react";
 import { INTERVAL_S5_TIME_CONST } from "@/common/const";
 
 interface InformaticsProps {
@@ -12,14 +10,26 @@ const Informatics = ({ setApiQueue, data }: InformaticsProps) => {
   // widget type
   const widgetType = "info";
 
+  // clear timeout
+  const [beforeTimeout, setBeforeTimeout] = useState();
+  const currentRef = useRef<any>();
+
+  useEffect(() => {
+    clearTimeout(beforeTimeout);
+    return () => {
+      setBeforeTimeout(currentRef.current);
+    };
+  }, [currentRef.current]);
+
   // interval
   const intervalApiCall = () => {
-    setTimeout(() => {
-      setApiQueue((prev: any) => [
-        ...prev,
-        { key: "act_agent", type: "spot", widget: widgetType },
-        { key: "inact_agent", type: "spot", widget: widgetType },
-      ]);
+    currentRef.current = setTimeout(() => {
+      setApiQueue((prev: any) =>
+        prev.concat([
+          { key: "act_agent", type: "spot", widget: widgetType },
+          { key: "inact_agent", type: "spot", widget: widgetType },
+        ])
+      );
       intervalApiCall();
     }, INTERVAL_S5_TIME_CONST);
   };
@@ -30,6 +40,7 @@ const Informatics = ({ setApiQueue, data }: InformaticsProps) => {
       { key: "act_agent", type: "spot", widget: widgetType },
       { key: "inact_agent", type: "spot", widget: widgetType },
     ]);
+
     intervalApiCall();
   }, []);
 
