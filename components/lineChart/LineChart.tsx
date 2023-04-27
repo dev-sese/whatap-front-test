@@ -30,19 +30,17 @@ interface LineChartProps {
 const LineChart = ({ title, apiData }: LineChartProps) => {
   // 데이터 관리
   const [yesterdayData, setYesterdayData] = useState(apiData["yesterday"]);
-  const [todayData, setTodayData] = useState(apiData["today"]);
+  const [todayData, setTodayData] = useState([]);
 
-  useEffect(() => {
-    if (apiData["yesterday"]) {
-      setYesterdayData(apiData["yesterday"]);
+  // 데이터 정제
+  const getDailyData = (dailyData: OPEN_API_RESULT | undefined) => {
+    let seriesData = dailyData?.data.objects[0].series;
+    let chartData = [];
+    for (let i = 0; i < seriesData?.length; i++) {
+      chartData.push(seriesData[i][1]);
     }
-  }, [apiData["yesterday"]]);
-
-  useEffect(() => {
-    if (apiData["today"]) {
-      setTodayData(apiData["today"]);
-    }
-  }, [apiData["today"]]);
+    return chartData;
+  };
 
   // 라벨 정제
   const getLabelData = (yesterdayData: OPEN_API_RESULT | undefined) => {
@@ -59,25 +57,18 @@ const LineChart = ({ title, apiData }: LineChartProps) => {
     return chartLabelData;
   };
 
-  // 어제 데이터 정제
-  const getYesterdayData = (yesterdayData: OPEN_API_RESULT | undefined) => {
-    let seriesData = yesterdayData?.data.objects[0].series;
-    let chartData = [];
-    for (let i = 0; i < seriesData?.length; i++) {
-      chartData.push(seriesData[i][1]);
+  useEffect(() => {
+    if (apiData["yesterday"]) {
+      setYesterdayData(apiData["yesterday"]);
     }
-    return chartData;
-  };
+  }, [apiData["yesterday"]]);
 
-  // 오늘 데이터 정제
-  const getTodayData = (todayData: OPEN_API_RESULT | undefined) => {
-    let seriesData = todayData?.data.objects[0].series;
-    let chartData = [];
-    for (let i = 0; i < seriesData?.length; i++) {
-      chartData.push(seriesData[i][1]);
+  // 오늘 데이터 변경되면 정제해서 업데이트
+  useEffect(() => {
+    if (apiData["today"]) {
+      setTodayData((prev: any) => prev.concat(getDailyData(apiData["today"])));
     }
-    return chartData;
-  };
+  }, [apiData["today"]]);
 
   // 차트 데이터로 가공
   const changeApiDataToChartData = () => {
@@ -86,11 +77,11 @@ const LineChart = ({ title, apiData }: LineChartProps) => {
       datasets: [
         {
           label: "yesterday",
-          data: getYesterdayData(yesterdayData),
+          data: getDailyData(yesterdayData),
         },
         {
           label: "today",
-          data: getTodayData(todayData),
+          data: todayData,
           borderColor: "rgb(54, 162, 235)",
           backgroundColor: "rgba(54, 162, 235, 0.2)",
           fill: true,
