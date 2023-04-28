@@ -34,19 +34,21 @@ const getOpenApi =
       } else {
         reject("잘못된 API 정보");
       }
-    }).then(({ url, name }: { url: string; name: string }) =>
-      fetch(getPath(url, param), {
-        headers: OPEN_API_HEADERS,
-      })
-        .then((response) => response.json())
-        .then(
-          (data): OPEN_API_RESULT => ({
-            key,
-            name,
-            data,
-          })
-        )
-    );
+    })
+      .then(({ url, name }: { url: string; name: string }) =>
+        fetch(getPath(url, param), {
+          headers: OPEN_API_HEADERS,
+        })
+          .then((response) => response.json())
+          .then(
+            (data): OPEN_API_RESULT => ({
+              key,
+              name,
+              data,
+            })
+          )
+      )
+      .catch((error) => console.log(error));
 
 const meta = getOpenApi("json");
 const spot = getOpenApi("");

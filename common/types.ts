@@ -9,3 +9,20 @@ export type OPEN_API_RESULT = {
   name: string;
   data: any;
 };
+
+export interface WidgectPropsType {
+  setApiQueue: React.Dispatch<
+    React.SetStateAction<
+      {
+        type: string;
+        key: OPEN_API_EMPTY_STRING_KEYS | OPEN_API_JSON_KEYS;
+        widget: string;
+        etime?: number;
+        stime?: number;
+        time: string;
+      }[]
+    >
+  >;
+  data: any;
+  pause: boolean;
+}

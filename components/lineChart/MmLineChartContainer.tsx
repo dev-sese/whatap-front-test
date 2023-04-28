@@ -1,18 +1,28 @@
 import { INTERVAL_M5_TIME_CONST } from "@/common/const";
+import { WidgectPropsType } from "@/common/types";
 import { useEffect, useRef, useState } from "react";
 import LineChart from "./LineChart";
-
-interface LineChartContainerProps {
-  setApiQueue: any;
-  data: any;
-}
 
 const MmLineChartContainer = ({
   setApiQueue,
   data,
-}: LineChartContainerProps) => {
+  pause,
+}: WidgectPropsType) => {
   // widget type
   const widgetType = "minute_line";
+
+  // clear timeout
+  const [beforeTimeout, setBeforeTimeout] = useState<NodeJS.Timeout>();
+  const currentRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    console.log("timer", currentRef.current, beforeTimeout);
+
+    clearTimeout(beforeTimeout);
+    return () => {
+      setBeforeTimeout(currentRef.current);
+    };
+  }, [currentRef.current]);
 
   // endtime 관리
   const [etime, setEtime] = useState(Date.now());
@@ -52,7 +62,7 @@ const MmLineChartContainer = ({
 
   // interval 호출
   const intervalApiCall = () => {
-    setTimeout(() => {
+    currentRef.current = setTimeout(() => {
       setApiQueue((prev: any) => [
         ...prev,
         {
@@ -97,6 +107,20 @@ const MmLineChartContainer = ({
     ]);
     intervalApiCall();
   }, []);
+
+  // 일시정지 시 Queue 등록 멈춤 & 재시작 시 등록 재시작
+  const didMount = useRef(false);
+  useEffect(() => {
+    if (!didMount.current) {
+      didMount.current = true;
+    } else {
+      if (pause) {
+        clearTimeout(currentRef.current);
+      } else {
+        intervalApiCall();
+      }
+    }
+  }, [pause]);
 
   return (
     <div>

@@ -1,33 +1,34 @@
-import { INTERVAL_M5_TIME_CONST, INTERVAL_S5_TIME_CONST } from "@/common/const";
-import {
-  OPEN_API_EMPTY_STRING_KEYS,
-  OPEN_API_JSON_KEYS,
-  OPEN_API_RESULT,
-} from "@/common/types";
-import api from "@/pages/api/openApi";
-import { useEffect, useRef, useState } from "react";
-import LineChart from "./LineChart";
-import RealTimeLineChart from "./RealTimeLineChart";
+import { INTERVAL_S5_TIME_CONST } from "@/common/const";
+import { WidgectPropsType } from "@/common/types";
 
-interface LineChartContainerProps {
-  setApiQueue: any;
-  data: any;
-}
+import { useEffect, useRef, useState } from "react";
+import RealTimeLineChart from "./RealTimeLineChart";
 
 const ScLineChartContainer = ({
   setApiQueue,
   data,
-}: LineChartContainerProps) => {
+  pause,
+}: WidgectPropsType) => {
   // widget type
   const widgetType = "second_line";
 
+  // clear timeout
+  const [beforeTimeout, setBeforeTimeout] = useState<NodeJS.Timeout>();
+  const currentRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    clearTimeout(beforeTimeout);
+    return () => {
+      setBeforeTimeout(currentRef.current);
+    };
+  }, [currentRef.current]);
+
   // interval
   const intervalApiCall = () => {
-    setTimeout(() => {
-      setApiQueue((prev: any) => [
-        ...prev,
-        { key: "cpu", type: "spot", widget: widgetType },
-      ]);
+    currentRef.current = setTimeout(() => {
+      setApiQueue((prev: any) =>
+        prev.concat([{ key: "cpu", type: "spot", widget: widgetType }])
+      );
       intervalApiCall();
     }, INTERVAL_S5_TIME_CONST);
   };
@@ -40,6 +41,20 @@ const ScLineChartContainer = ({
     ]);
     intervalApiCall();
   }, []);
+
+  // 일시정지 시 Queue 등록 멈춤 & 재시작 시 등록 재시작
+  const didMount = useRef(false);
+  useEffect(() => {
+    if (!didMount.current) {
+      didMount.current = true;
+    } else {
+      if (pause) {
+        clearTimeout(currentRef.current);
+      } else {
+        intervalApiCall();
+      }
+    }
+  }, [pause]);
 
   return (
     <div>

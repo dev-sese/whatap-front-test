@@ -1,25 +1,37 @@
 import { INTERVAL_S5_TIME_CONST } from "@/common/const";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import BarChart from "@/components/barChart/BarChart";
+import { WidgectPropsType } from "@/common/types";
 
-interface BarChartContainerProps {
-  setApiQueue: any;
-  data: any;
-}
-
-const DbBarChartContainer = ({ setApiQueue, data }: BarChartContainerProps) => {
+const DbBarChartContainer = ({
+  setApiQueue,
+  data,
+  pause,
+}: WidgectPropsType) => {
   // widget type
   const widgetType = "bar_db";
 
+  // clear timeout
+  const [beforeTimeout, setBeforeTimeout] = useState<NodeJS.Timeout>();
+  const currentRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    clearTimeout(beforeTimeout);
+    return () => {
+      setBeforeTimeout(currentRef.current);
+    };
+  }, [currentRef.current]);
+
   // interval
   const intervalApiCall = () => {
-    setTimeout(() => {
-      setApiQueue((prev: any) => [
-        ...prev,
-        { key: "dbconn_total", type: "spot", widget: widgetType },
-        { key: "dbconn_act", type: "spot", widget: widgetType },
-        { key: "dbconn_idle", type: "spot", widget: widgetType },
-      ]);
+    currentRef.current = setTimeout(() => {
+      setApiQueue((prev: any) =>
+        prev.concat([
+          { key: "dbconn_total", type: "spot", widget: widgetType },
+          { key: "dbconn_act", type: "spot", widget: widgetType },
+          { key: "dbconn_idle", type: "spot", widget: widgetType },
+        ])
+      );
       intervalApiCall();
     }, INTERVAL_S5_TIME_CONST);
   };
@@ -34,6 +46,20 @@ const DbBarChartContainer = ({ setApiQueue, data }: BarChartContainerProps) => {
     ]);
     intervalApiCall();
   }, []);
+
+  // 일시정지 시 Queue 등록 멈춤 & 재시작 시 등록 재시작
+  const didMount = useRef(false);
+  useEffect(() => {
+    if (!didMount.current) {
+      didMount.current = true;
+    } else {
+      if (pause) {
+        clearTimeout(currentRef.current);
+      } else {
+        intervalApiCall();
+      }
+    }
+  }, [pause]);
 
   return (
     <div>
